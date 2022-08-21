@@ -1,7 +1,8 @@
-export default function (moveDom, blocks) {
+import { events } from "./events"
+export default function (moveDom, container) {
     let currentComponent = null
     const drop = e => {
-        blocks.push({
+        container.blocks.push({
             top: e.offsetY,
             left: e.offsetX,
             zIndex: 1,
@@ -28,13 +29,14 @@ export default function (moveDom, blocks) {
         moveDom.value.addEventListener('dragover', dragover)
         moveDom.value.addEventListener('dragleave', dragleave)
         moveDom.value.addEventListener('drop', drop)
+        events.emit("start")
     }
     const dragend = () => {//移除监听事件
-        currentComponent = null
         moveDom.value.removeEventListener('dragenter', dragenter)
         moveDom.value.removeEventListener('dragover', dragover)
         moveDom.value.removeEventListener('dragleave', dragleave)
         moveDom.value.removeEventListener('drop', drop)
+        events.emit("end")
     }
     return {
         dragend,

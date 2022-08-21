@@ -1,4 +1,6 @@
+
 import { computed, ref, reactive } from "vue"
+import { events } from "./events"
 export default function (data) {
     const lastSelectIndex = ref(-1)
     const lastSelectBlock = computed(() => { return data.blocks[lastSelectIndex.value] })
@@ -31,13 +33,15 @@ export default function (data) {
     }
     let dragState = {
         startX: 0,
-        startY: 0
+        startY: 0,
+        draging: false
     }
     const mousedown = (e) => {
         const { width: BWidth, height: BHeight } = lastSelectBlock.value
         dragState = {
             startX: e.clientX,
             startY: e.clientY,
+            draging: false,
             startLeft: lastSelectBlock.value.left,
             startTop: lastSelectBlock.value.top,
             //保存每个元素的初始位置
@@ -71,6 +75,10 @@ export default function (data) {
         //去除辅助线
         markLine.x = null
         markLine.y = null
+        if (dragState.draging) {
+            events.emit("end")
+            dragState.draging = false
+        }
     }
     const mousemove = e => {
         const { clientX, clientY } = e
@@ -104,6 +112,10 @@ export default function (data) {
             item.top = dragState.startPosition[index].top + moveY
             item.left = dragState.startPosition[index].left + moveX
         })
+        if (!dragState.draging) {
+            events.emit("start")
+            dragState.draging = true
+        }
     }
 
     return {
