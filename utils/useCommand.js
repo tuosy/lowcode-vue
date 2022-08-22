@@ -1,7 +1,7 @@
 import { events } from "./events"
 import { onUnmounted } from "vue"
 import deepcopy from "deepcopy"
-export default function (containerData) {
+export default function (containerData, focusData) {
     const state = {
         current: -1,//操作队列的索引
         commands: [],
@@ -40,6 +40,7 @@ export default function (containerData) {
             }
         }
     })
+
     register({
         name: "redo",
         keyword: "ctrl+y",
@@ -51,6 +52,73 @@ export default function (containerData) {
                         item.redo && item.redo()
                         state.current++
                     }
+                }
+            }
+        }
+    })
+    register({
+        name: "contrulTop",
+        pushQueue: true,
+        excutor() {
+            const { focus, unfocus } = focusData.value
+            let before = deepcopy(containerData.blocks)
+            let after = (() => {
+                let maxZIndex = unfocus.reduce((preMax, block) => {
+                    return Math.max(preMax, block.zIndex)
+                }, -Infinity)
+                focus.forEach(block => block.zIndex = maxZIndex + 1)
+                return containerData.blocks
+            })()
+            return {
+                redo() {
+                    containerData.blocks = after
+                },
+                undo() {
+                    containerData.blocks = before
+                }
+            }
+        }
+    })
+    register({
+        name: "contrulBottom",
+        pushQueue: true,
+        excutor() {
+            const { focus, unfocus } = focusData.value
+            let before = deepcopy(containerData.blocks)
+            let after = (() => {
+                let minZIndex = unfocus.reduce((preMin, block) => {
+                    return Math.min(preMin, block.zIndex)
+                }, Infinity) - 1
+                if (minZIndex < 0) {
+                    const dur = Math.abs(minZIndex)
+                    minZIndex = 0
+                    unfocus.forEach(block => block.zIndex += dur)
+                }
+                focus.forEach(block => block.zIndex = minZIndex)
+                return containerData.blocks
+            })()
+            return {
+                redo() {
+                    containerData.blocks = after
+                },
+                undo() {
+                    containerData.blocks = before
+                }
+            }
+        }
+    })
+    register({
+        name: "delete",
+        pushQueue: true,
+        excutor() {
+            let before = deepcopy(containerData.blocks)
+            let after = focusData.value.unfocus
+            return {
+                redo() {
+                    containerData.blocks = after
+                },
+                undo() {
+                    containerData.blocks = before
                 }
             }
         }

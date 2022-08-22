@@ -10,7 +10,7 @@ export default defineComponent({
                 return {
                     top: `${props.comInfo.top}px`,
                     left: `${props.comInfo.left}px`,
-                    zIndex: `${props.comInfo.zIndex}`
+                    zIndex: `${props.comInfo.zIndex}`,
                 }
             },
             set: (val) => {
@@ -33,7 +33,6 @@ export default defineComponent({
         return () => {
             return <div
                 style={comStyle.value} ref={centerRef}
-                className={props.comInfo.focus ? "component-style-focus" : "component-style"}
             >
                 {component}
             </div>

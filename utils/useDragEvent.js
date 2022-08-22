@@ -1,5 +1,5 @@
 import { events } from "./events"
-export default function (moveDom, container) {
+export default function (moveDom, container, preview) {
     let currentComponent = null
     const drop = e => {
         container.blocks.push({
@@ -20,6 +20,10 @@ export default function (moveDom, container) {
         e.dataTransfer.dropEffect = 'none'
     }
     const dragstart = (e, component) => {
+        if (preview.value) {
+            alert("预览状态下，不能编辑！")
+            return
+        }
         //当一元素拖入到目标元素中监听事件dragenter触发一次
         //dragover在目标元素中拖动会一直触发，需要阻止默认事件，否则触发不了drop事件
         //dragleave离开时促发一次

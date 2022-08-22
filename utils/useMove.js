@@ -1,22 +1,20 @@
-
 import { computed, ref, reactive } from "vue"
 import { events } from "./events"
-export default function (data) {
+export default function (data, preview) {
     const lastSelectIndex = ref(-1)
     const lastSelectBlock = computed(() => { return data.blocks[lastSelectIndex.value] })
     let markLine = reactive({
         x: null,//用来存放横向放置的线
         y: null//用来存放纵向放置的线
     })
-    const focusComponent = computed(() => {
-        let focus = data.blocks.filter(item => item.focus)
-        return focus
-    })
-    const unfocusComponent = computed(() => {
-        let unfocus = data.blocks.filter(item => !item.focus)
-        return unfocus
+    const focusData = computed(() => {
+        let focus = []
+        let unfocus = []
+        data.blocks.forEach(block => (block.focus ? focus : unfocus).push(block));
+        return { focus, unfocus }
     })
     const componentMousedown = (e, component, index) => {
+        if (preview.value) return
         e.preventDefault()
         e.stopPropagation()
         if (!component.focus) {
@@ -25,10 +23,14 @@ export default function (data) {
         lastSelectIndex.value = index
         mousedown(e)
     }
-    const canvasMousedown = (e) => {
-        data.blocks.map(item => {
-            item.focus = false
+    const clearFocus = () => {
+        data.blocks.forEach(item => {
+            return item.focus = false
         })
+    }
+    const canvasMousedown = (e) => {
+        if (preview.value) return
+        clearFocus()
         lastSelectIndex.value = -1
     }
     let dragState = {
@@ -45,10 +47,10 @@ export default function (data) {
             startLeft: lastSelectBlock.value.left,
             startTop: lastSelectBlock.value.top,
             //保存每个元素的初始位置
-            startPosition: focusComponent.value.map(({ top, left }) => ({ top, left })),
+            startPosition: focusData.value.focus.map(({ top, left }) => ({ top, left })),
             lines: (() => {
                 let lines = { x: [], y: [] };//x用来存放横向放置的线,y用来存放纵向放置的线
-                [...unfocusComponent.value, { top: 0, left: 0, width: data.container.width, height: data.container.height }].forEach(item => {
+                [...focusData.value.unfocus, { top: 0, left: 0, width: data.container.width, height: data.container.height }].forEach(item => {
                     const { top: Atop, left: Aleft, width: Awidth, height: Aheight } = item
                     lines.x.push({ top: Atop, showTop: Atop })//顶对顶时的辅助线
                     lines.x.push({ top: Atop - BHeight, showTop: Atop })//顶对底时
@@ -108,7 +110,7 @@ export default function (data) {
         }
         markLine.x = x
         markLine.y = y
-        focusComponent.value.forEach((item, index) => {
+        focusData.value.focus.forEach((item, index) => {
             item.top = dragState.startPosition[index].top + moveY
             item.left = dragState.startPosition[index].left + moveX
         })
@@ -121,6 +123,8 @@ export default function (data) {
     return {
         componentMousedown,
         canvasMousedown,
-        markLine
+        markLine,
+        focusData,
+        clearFocus
     }
 }
