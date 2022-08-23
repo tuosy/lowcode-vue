@@ -5,6 +5,7 @@ import useDragEvent from "../utils/useDragEvent";
 import useMove from "../utils/useMove";
 import useCommand from "../utils/useCommand";
 import $dialog from "../components/Dialog"
+import { DropdownItem, $dropdown } from "../components/Dropdown";
 export default defineComponent({
     props: {
         modelValue: { type: Object }
@@ -39,6 +40,33 @@ export default defineComponent({
 
         const { componentMousedown, canvasMousedown, markLine, focusData, clearFocus } = useMove(containerData.value, preview) //实现画布中的元素移动
         const { commandMap } = useCommand(containerData.value, focusData) //封装撤销等命令
+        const onContextmenu = (e, block) => {
+            e.preventDefault()
+            $dropdown({
+                eob: e,
+                content: () => {
+                    return <>
+                        <DropdownItem label="删除" icon="iconfont icon-shanchu" onClick={() => commandMap.delete()}></DropdownItem>
+                        <DropdownItem label="置顶" icon="iconfont icon-control-top" onClick={() => commandMap.contrulTop()}></DropdownItem>
+                        <DropdownItem label="置底" icon="iconfont icon-control-bottom" onClick={() => commandMap.contrulBottom()}></DropdownItem>
+                        <DropdownItem label="查看" icon="iconfont icon-icon_yulan" onClick={() => $dialog({
+                            title: "导出的组件JSON",
+                            container: JSON.stringify(block),
+                            footer: false
+                        })}></DropdownItem>
+                        <DropdownItem label="导入" icon="iconfont icon-import" onClick={() => $dialog({
+                            title: "输入组件JSON",
+                            container: "",
+                            footer: true,
+                            onConfirm: (data) => {
+                                let text = JSON.parse(data)
+                                commandMap.updateBlock(block, text)
+                            }
+                        })}></DropdownItem>
+                    </>
+                }
+            })
+        }
         const buttons = [
             { label: "撤销", icon: "iconfont icon-back", hander: () => commandMap.undo() },
             { label: "回退", icon: "iconfont icon-forward", hander: () => commandMap.redo() },
@@ -102,7 +130,10 @@ export default defineComponent({
                                 class="component-style"
                                 class={item.focus ? "component-style-focus" : ""}
                                 class={preview.value ? "component-style-preview" : ""}
-                                comInfo={item} onMousedown={e => { componentMousedown(e, item, index) }}></EditerBlock>)
+                                comInfo={item}
+                                onMousedown={e => { componentMousedown(e, item, index) }}
+                                onContextmenu={e => onContextmenu(e, item)}
+                            ></EditerBlock>)
                             )
                         }
                         {markLine.x !== null && <div className="line-x" style={{ top: markLine.x + "px" }}></div>}

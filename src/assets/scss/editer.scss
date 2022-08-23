@@ -129,3 +129,29 @@
     bottom: 0px;
     border-left: 2px dotted red;
 }
+.contextmenu{
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0px 2px  5px 2px #bbb;
+    z-index: 1000;
+    border-radius: 3px;
+    padding: 8px 0px;
+    font-size: 0.85rem;
+}
+.item-dropdown{
+    line-height: 30px;
+    width: 100px;
+    border-bottom: 1px solid #bbb;
+    text-align: center;
+    cursor: pointer;
+    &>i{
+        margin-right: 5px;
+    }
+    &:hover{
+        background-color: #bbb;
+    }
+    &:first-child{
+        border-top: 1px solid #bbb;
+    }
+}
+

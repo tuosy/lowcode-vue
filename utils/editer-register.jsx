@@ -29,7 +29,7 @@ config.register({
 })
 config.register({
     label: '输入框',
-    render: () => <ElInput placeholder="输入框"></ElInput>,
+    render: () => { return <ElInput placeholder="输入框"></ElInput> },
     preview: () => <ElInput placeholder="输入框"></ElInput>,
     key: 'input'
 })

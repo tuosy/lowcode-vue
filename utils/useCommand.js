@@ -111,14 +111,41 @@ export default function (containerData, focusData) {
         name: "delete",
         pushQueue: true,
         excutor() {
-            let before = deepcopy(containerData.blocks)
-            let after = focusData.value.unfocus
+            let state = {
+                before: deepcopy(containerData.blocks),
+                after: focusData.value.unfocus
+            }
             return {
                 redo() {
-                    containerData.blocks = after
+                    containerData.blocks = state.after
                 },
                 undo() {
-                    containerData.blocks = before
+                    containerData.blocks = state.before
+                }
+            }
+        }
+    })
+    register({
+        name: "updateBlock",
+        pushQueue: true,
+        excutor(oldValue, newValue) {
+            let state = {
+                before: containerData.blocks,
+                after: (() => {
+                    const block = [...containerData.blocks]
+                    let index = block.indexOf(oldValue)
+                    if (index > -1) {
+                        block.splice(index, 1, newValue)
+                    }
+                    return block
+                })()
+            }
+            return {
+                redo() {
+                    containerData.blocks = state.after
+                },
+                undo() {
+                    containerData.blocks = state.before
                 }
             }
         }

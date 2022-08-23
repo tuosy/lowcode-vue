@@ -8,12 +8,12 @@
 import { ref, provide } from "vue";
 import data from "./data.json";
 import Editer from "../packages/Editer.jsx";
-import { config } from "../utils/editer- register.jsx";
+import { config } from "../utils/editer-register.jsx";
 export default {
   components: {
     Editer,
   },
-  setup(props) {
+  setup() {
     const state = ref(data);
     provide("config", config);
     return {

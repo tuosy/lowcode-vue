@@ -1,4 +1,4 @@
-import { defineComponent, computed, inject, ref, onMounted } from "vue";
+import { defineComponent, computed, inject, ref, onMounted, onBeforeUpdate } from "vue";
 
 export default defineComponent({
     props: {
@@ -17,9 +17,20 @@ export default defineComponent({
                 //修改计算属性
             }
         })
+        const key = computed({
+            get: () => {
+                return props.comInfo.key
+            },
+            set: (val) => {
+
+            }
+        })
         const centerRef = ref(null)
         const config = inject("config")
-        const component = config.componentMap[props.comInfo.key].render()
+        let component = config.componentMap[key.value]
+        onBeforeUpdate(() => {
+            component = config.componentMap[key.value]
+        })
         onMounted(() => {
             const { offsetHeight, offsetWidth } = centerRef.value
             if (props.comInfo.alignCenter) { //修改松手时元素位置
@@ -34,7 +45,7 @@ export default defineComponent({
             return <div
                 style={comStyle.value} ref={centerRef}
             >
-                {component}
+                {component.render()}
             </div>
         }
     }
