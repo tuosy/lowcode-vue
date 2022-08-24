@@ -8,19 +8,30 @@
             "top": 100,
             "left": 100,
             "zIndex": 1,
-            "key": "text"
+            "key": "text",
+            "props": {
+                "text": "tsy",
+                "color": "red",
+                "size": "1rem"
+            }
         },
         {
             "top": 200,
             "left": 200,
             "zIndex": 1,
-            "key": "input"
+            "key": "input",
+            "props": {}
         },
         {
             "top": 300,
             "left": 300,
             "zIndex": 1,
-            "key": "button"
+            "key": "button",
+            "props": {
+                "text": "按钮",
+                "type": "primary",
+                "size": "mini"
+            }
         }
     ]
 }

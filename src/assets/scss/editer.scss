@@ -4,7 +4,7 @@
     height: 100%;
     &-left,&-right{
         width: 250px;
-        background-color: rgb(243, 76, 76);
+        // background-color: rgb(243, 76, 76);
         position: absolute;
         top: 10px;
         bottom: 10px;
@@ -89,7 +89,7 @@
             height: 100%;
             overflow: scroll;
             &_nr{
-                background-color: yellow;
+                background-color:rgba(0,0,0,0.1);
                 margin: 10px auto;
                 position: relative;
             }
@@ -155,3 +155,9 @@
     }
 }
 
+.editer-attribute{
+    padding: 30px;
+    &-item{
+        // margin-top: 15px;
+    }
+}

@@ -45,7 +45,7 @@ export default defineComponent({
             return <div
                 style={comStyle.value} ref={centerRef}
             >
-                {component.render()}
+                {component.render({ props: props.comInfo.props })}
             </div>
         }
     }

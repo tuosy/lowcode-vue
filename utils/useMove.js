@@ -125,6 +125,7 @@ export default function (data, preview) {
         canvasMousedown,
         markLine,
         focusData,
-        clearFocus
+        clearFocus,
+        lastSelectBlock
     }
 }

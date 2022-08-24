@@ -7,7 +7,8 @@ export default function (moveDom, container, preview) {
             left: e.offsetX,
             zIndex: 1,
             key: currentComponent.key,
-            alignCenter: true
+            alignCenter: true,
+            props: {}
         })
     }
     const dragenter = e => {

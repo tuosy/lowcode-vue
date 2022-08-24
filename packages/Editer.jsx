@@ -6,6 +6,7 @@ import useMove from "../utils/useMove";
 import useCommand from "../utils/useCommand";
 import $dialog from "../components/Dialog"
 import { DropdownItem, $dropdown } from "../components/Dropdown";
+import { EditerAttribute } from "./editer-attribute";
 export default defineComponent({
     props: {
         modelValue: { type: Object }
@@ -38,7 +39,7 @@ export default defineComponent({
         const config = inject("config")
         const { dragstart, dragend } = useDragEvent(moveDom, containerData.value, preview)//实现元素添加时的拖动
 
-        const { componentMousedown, canvasMousedown, markLine, focusData, clearFocus } = useMove(containerData.value, preview) //实现画布中的元素移动
+        const { componentMousedown, canvasMousedown, markLine, focusData, clearFocus, lastSelectBlock } = useMove(containerData.value, preview) //实现画布中的元素移动
         const { commandMap } = useCommand(containerData.value, focusData) //封装撤销等命令
         const onContextmenu = (e, block) => {
             e.preventDefault()
@@ -141,7 +142,9 @@ export default defineComponent({
                     </div>
                 </div>
             </div>
-            <div className="editer-right">属性区</div>
+            <div className="editer-right">
+                <EditerAttribute block={lastSelectBlock.value} data={containerData.value}></EditerAttribute>
+            </div>
         </div>
     }
 })
