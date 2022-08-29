@@ -1,4 +1,4 @@
-import { ElButton, ElInput, ElContainer, ElHeader, ElDatePicker, ElCheckbox } from 'element-plus'
+import { ElButton, ElInput, ElContainer, ElHeader, ElDatePicker, ElCheckbox, ElSelect, ElOption } from 'element-plus'
 import { ref } from "vue"
 const value = ref('')
 const checkValue = ref(true)
@@ -18,6 +18,7 @@ export var config = componentsConfig()
 const InputProps = (label) => ({ type: "input", label })
 const ColorProps = (label) => ({ type: "color", label })
 const SelectProps = (label, option) => ({ type: "select", label, option })
+const tableProps = (label, table) => ({ type: "table", label, table })
 config.register({
     label: '文本',
     render: ({ props }) => <span style={{ color: props.color, fontSize: props.size }}>{props.text || "渲染文本"}</span>,
@@ -57,11 +58,40 @@ config.register({
 })
 config.register({
     label: '输入框',
-    render: () => { return <ElInput placeholder="输入框"></ElInput> },
+    render: ({ model, size }) => { return <ElInput style={{ width: `${size.width}px`, height: `${size.height}px` }} placeholder="输入框" {...model.default}></ElInput> },
     preview: () => <ElInput placeholder="输入框"></ElInput>,
     key: 'input',
+    model: {
+        default: "绑定字段"
+    },
+    resize: {
+        width: true,  //可修改宽度
+        height: true  //可修改高度
+    }
+})
+config.register({
+    label: "下拉框",
+    render: ({ props, model, size }) => <ElSelect style={{ width: `${size.width}px` }} {...model.default}>
+        {(props.options || []).map((opt, index) => {
+            return <ElOption label={opt.label} value={opt.value} key={index}></ElOption>
+        })}
+    </ElSelect>,
+    preview: () => <ElSelect></ElSelect>,
+    key: "select",
     props: {
-
+        options: tableProps("下拉选项", {
+            options: [
+                { label: "显示值", filed: "label" },
+                { label: "绑定值", filed: "value" }
+            ],
+            key: 'label'
+        })
+    },
+    model: {
+        default: "绑定字段"
+    },
+    resize: {
+        width: true,  //可修改宽度
     }
 })
 config.register({

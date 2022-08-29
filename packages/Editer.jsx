@@ -9,7 +9,8 @@ import { DropdownItem, $dropdown } from "../components/Dropdown";
 import { EditerAttribute } from "./editer-attribute";
 export default defineComponent({
     props: {
-        modelValue: { type: Object }
+        modelValue: { type: Object },
+        formData: Object
     },
     emits: ["updata:modelValue"],
     setup(props, context) {
@@ -77,7 +78,7 @@ export default defineComponent({
                     container: "",
                     footer: true,
                     onConfirm: (data) => {
-                        commandMap.undateContainer(JSON.parse(data))
+                        commandMap.updateContainer(JSON.parse(data))
                     }
                 })
             },
@@ -134,6 +135,7 @@ export default defineComponent({
                                 comInfo={item}
                                 onMousedown={e => { componentMousedown(e, item, index) }}
                                 onContextmenu={e => onContextmenu(e, item)}
+                                formData={props.formData}
                             ></EditerBlock>)
                             )
                         }
@@ -143,7 +145,7 @@ export default defineComponent({
                 </div>
             </div>
             <div className="editer-right">
-                <EditerAttribute block={lastSelectBlock.value} data={containerData.value}></EditerAttribute>
+                <EditerAttribute block={lastSelectBlock.value} data={containerData.value} updateContainer={commandMap.updateContainer} updateBlock={commandMap.updateBlock}></EditerAttribute>
             </div>
         </div>
     }

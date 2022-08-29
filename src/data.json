@@ -13,14 +13,16 @@
                 "text": "tsy",
                 "color": "red",
                 "size": "1rem"
-            }
+            },
+            "model": {}
         },
         {
             "top": 200,
             "left": 200,
             "zIndex": 1,
             "key": "input",
-            "props": {}
+            "props": {},
+            "model": {}
         },
         {
             "top": 300,
@@ -31,7 +33,8 @@
                 "text": "按钮",
                 "type": "primary",
                 "size": "mini"
-            }
+            },
+            "model": {}
         }
     ]
 }

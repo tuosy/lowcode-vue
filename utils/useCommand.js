@@ -151,19 +151,19 @@ export default function (containerData, focusData) {
         }
     })
     register({
-        name: "undateContainer",
+        name: "updateContainer",
         pushQueue: true,
         excutor(newValue) {
             let state = {
-                before: containerData.blocks,
-                after: newValue.blocks
+                before: containerData.container,
+                after: newValue.container
             }
             return {
                 redo() {
-                    containerData.blocks = state.after
+                    containerData.container = state.after
                 },
                 undo() {
-                    containerData.blocks = state.before
+                    containerData.container = state.before
                 }
             }
         }
